@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Temporary Issue | Sharan Dental Clinic</title>
+<meta name="robots" content="noindex, follow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,500&family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,500;0,6..12,600;1,6..12,300&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito Sans', system-ui, Arial, sans-serif;
+    background: #F7F5F0;
+    color: #1C1A17;
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 480px; text-align: center; }
+  .tooth {
+    width: 64px; height: 64px;
+    border-radius: 16px;
+    background: #B8893A;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 28px;
+  }
+  .tooth svg { width: 32px; height: 32px; }
+  h1 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: clamp(24px, 5vw, 30px);
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+  p { font-size: 15px; color: #4A4740; margin-bottom: 32px; }
+  .actions { display: flex; flex-direction: column; gap: 12px; margin-bottom: 36px; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    font-size: 15px; font-weight: 600; padding: 14px 24px; border-radius: 8px;
+    text-decoration: none; cursor: pointer; border: none;
+    transition: transform .15s, background .15s;
+  }
+  .btn-primary { background: #1558B0; color: #fff; }
+  .btn-primary:hover { background: #0D3F87; transform: translateY(-1px); }
+  .btn-whatsapp { background: #25D366; color: #fff; }
+  .btn-whatsapp:hover { background: #1da851; transform: translateY(-1px); }
+  .btn-ghost { background: #fff; color: #1C1A17; border: 1px solid #E4E1DC; }
+  .btn-ghost:hover { border-color: #1558B0; }
+  .contact-line { font-size: 14px; color: #7A7774; padding-top: 24px; border-top: 1px solid #E4E1DC; }
+  .contact-line a { color: #1558B0; font-weight: 600; text-decoration: none; }
+  .contact-line a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="tooth">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8.5 2.5C6.5 2.5 3.5 4.2 3.5 7.8C3.5 10.2 4.4 11.9 5.3 13.5C6.1 15 6.4 17.8 7.5 19.3C8 20 8.8 19.7 9.1 18.6C9.5 17.4 9.7 15.2 10.5 14H13.5C14.3 15.2 14.5 17.4 14.9 18.6C15.2 19.7 16 20 16.5 19.3C17.6 17.8 17.9 15 18.7 13.5C19.6 11.9 20.5 10.2 20.5 7.8C20.5 4.2 17.5 2.5 15.5 2.5C14 2.5 13.2 3.4 12 3.4C10.8 3.4 10 2.5 8.5 2.5Z" fill="white" opacity=".95"/>
+      </svg>
+    </div>
+
+    <h1>We're experiencing a temporary issue</h1>
+    <p>Please try again in a few minutes, or contact the clinic directly and we'll be happy to help.</p>
+
+    <div class="actions">
+      <a href="/" class="btn btn-primary">↻ Try Again</a>
+      <a href="https://api.whatsapp.com/send?phone=919738387880" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">💬 Chat on WhatsApp</a>
+      <a href="tel:+919738387880" class="btn btn-ghost">📞 Call +91 97383 87880</a>
+    </div>
+
+    <p class="contact-line">
+      Sharan Dental Clinic, HSR Layout, Bengaluru<br>
+      <a href="mailto:jrtnavin@yahoo.co.in">jrtnavin@yahoo.co.in</a>
+    </p>
+  </div>
+</body>
+</html>
