@@ -1085,7 +1085,7 @@ img { display: block; max-width: 100%; }
 
 /* ── Page load fade-in ───────────────────────────── */
 .page-fade-wrap { animation: pageFadeIn .45s cubic-bezier(.4,0,.2,1) both; }
-@keyframes pageFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes pageFadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 
 /* ── WhatsApp Quick-Reply Bubble — sticky throughout entire page ─── */
@@ -2466,7 +2466,7 @@ const EMAILJS_SERVICE_ID       = 'service_4oovoce';
 const EMAILJS_TEMPLATE_DOCTOR  = 'template_ujhps1x';
 const EMAILJS_TEMPLATE_PATIENT = 'template_13cc12b';
 
-const CLINIC_DOCTOR_EMAIL = 'jrtnavin@yahoo.co.in';
+const CLINIC_DOCTOR_EMAIL = 'dr.jrtnavin@gmail.com'; // EmailJS delivers to this Gmail — replies go to Yahoo via Reply-To in template
 const CLINIC_DOCTOR_NAME  = 'Dr. Navin';
 const CLINIC_DOCTOR_PHONE = '+91 97383 87880';
 const CLINIC_ADDRESS      = "3rd Avenue, 5th Main Road, Teacher's Colony, HSR Layout, Bengaluru 560034";
@@ -2777,7 +2777,9 @@ formEl.addEventListener('submit', async function(e) {
         appointment_number: apptNumber,
         patient_name: name, patient_phone: phone, patient_email: email,
         appt_date: prettyDate, appt_time: timeLabel, treatment: service,
-        notes: cleanNotes || 'None', to_email: CLINIC_DOCTOR_EMAIL
+        notes: cleanNotes || 'None',
+        to_email: 'dr.jrtnavin@gmail.com',  // hardcoded — template delivers to Gmail
+        reply_to: email                       // replies go back to the patient
       });
     } catch (err) {
       console.warn('Doctor email failed:', err);
@@ -2788,7 +2790,9 @@ formEl.addEventListener('submit', async function(e) {
         appointment_number: apptNumber, patient_name: name, to_email: email,
         appt_date: prettyDate, appt_time: timeLabel,
         doctor_name: CLINIC_DOCTOR_NAME, doctor_phone: CLINIC_DOCTOR_PHONE,
-        doctor_email: CLINIC_DOCTOR_EMAIL, clinic_address: CLINIC_ADDRESS
+        doctor_email: 'jrtnavin@yahoo.co.in',  // shown in email body as contact
+        clinic_address: CLINIC_ADDRESS,
+        reply_to: 'jrtnavin@yahoo.co.in'        // patient replies land in Yahoo
       });
     } catch (err) {
       console.warn('Patient email failed:', err);
