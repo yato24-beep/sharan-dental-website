@@ -1428,7 +1428,7 @@ img {
   <button class="nav-link" onclick="mobileNav('contact')">Contact</button>
   <div class="nav-drawer-actions">
     <a href="tel:+919738387880" class="btn btn-ghost">Call us</a>
-    <button class="btn btn-primary" onclick="mobileNav('contact')">Book appointment</button>
+    <a href="#contact" class="btn btn-primary" onclick="mobileNav('contact');return false;" style="text-align:center;">Book appointment</a>
   </div>
 </div>
 
@@ -2187,7 +2187,7 @@ function closeMenu() {
   drawer.classList.remove('open');
   document.body.style.overflow = '';
 }
-function mobileNav(id) { closeMenu(); setTimeout(() => goTo(id), 80); }
+function mobileNav(id) { closeMenu(); setTimeout(() => goTo(id), 300); }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
 
 /* ── Word swap animation ───────────────────────── */
