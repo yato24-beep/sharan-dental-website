@@ -2466,7 +2466,7 @@ const EMAILJS_SERVICE_ID       = 'service_4oovoce';
 const EMAILJS_TEMPLATE_DOCTOR  = 'template_ujhps1x';
 const EMAILJS_TEMPLATE_PATIENT = 'template_13cc12b';
 
-const CLINIC_DOCTOR_EMAIL = 'dr.jrtnavin@gmail.com'; // EmailJS delivers to this Gmail — replies go to Yahoo via Reply-To in template
+const CLINIC_DOCTOR_EMAIL = 'jrtnavin@yahoo.co.in'; // EmailJS delivers to this Gmail — replies go to Yahoo via Reply-To in template
 const CLINIC_DOCTOR_NAME  = 'Dr. Navin';
 const CLINIC_DOCTOR_PHONE = '+91 97383 87880';
 const CLINIC_ADDRESS      = "3rd Avenue, 5th Main Road, Teacher's Colony, HSR Layout, Bengaluru 560034";
@@ -2785,7 +2785,7 @@ formEl.addEventListener('submit', async function(e) {
         patient_name: name, patient_phone: phone, patient_email: email,
         appt_date: prettyDate, appt_time: timeLabel, treatment: service,
         notes: cleanNotes || 'None',
-        to_email: 'dr.jrtnavin@gmail.com',  // hardcoded — template delivers to Gmail
+        to_email: 'jrtnavin@yahoo.co.in',  // hardcoded — template delivers to Gmail
         reply_to: email                       // replies go back to the patient
       });
     } catch (err) {
