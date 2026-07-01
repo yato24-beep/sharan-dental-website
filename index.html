@@ -3,7 +3,7 @@
 <head>
 <script>document.documentElement.classList.remove('no-js');</script>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 
 <!-- Primary SEO -->
 <title>Sharan Dental Clinic | Best Dentist in HSR Layout, Bengaluru | Dr. Navin</title>
@@ -105,7 +105,28 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
 }
+/* Mobile touch fixes */
+button, a, [role="button"] {
+  -webkit-tap-highlight-color: rgba(21,101,192,.12);
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-touch-callout: none;
+}
+input, select, textarea {
+  -webkit-appearance: none;
+  border-radius: 0;
+}
+.field input, .field select, .field textarea {
+  border-radius: var(--radius-sm) !important;
+  font-size: 16px !important; /* prevents iOS zoom on focus */
+}
+/* Minimum tap target size — Apple HIG & Google Material */
+.nav-link, .btn, .faq-btn, .form-submit, .wa-fab-btn, .wa-quick {
+  min-height: 44px;
+}
+.nav-hamburger { min-height: 44px; min-width: 44px; justify-content: center; align-items: center; }
 h1,h2,h3,h4 { font-family: var(--font-display); font-weight: 500; line-height: 1.15; }
 h1 { font-size: clamp(2.8rem, 5.5vw, 4.5rem); }
 h2 { font-size: clamp(2rem, 4vw, 3rem); }
@@ -189,6 +210,7 @@ img { display: block; max-width: 100%; }
 }
 .nav-link:hover { color: var(--blue); background: var(--blue-pale); }
 .nav-cta-wrap { display: flex; gap: 8px; margin-left: 10px; align-items: center; }
+@media (max-width: 1100px) { .nav-cta-wrap a.btn-ghost { display: none; } }
 
 /* Hamburger */
 .nav-hamburger {
@@ -209,7 +231,7 @@ img { display: block; max-width: 100%; }
   box-shadow: 0 8px 24px rgba(13,27,42,.1);
 }
 .nav-drawer.open { display: flex; }
-.nav-drawer .nav-link { padding: 14px 8px; font-size: .95rem; border-bottom: 1px solid var(--rule-light); border-radius: 0; display: block; text-align: left; }
+.nav-drawer .nav-link { padding: 16px 8px; font-size: .95rem; border-bottom: 1px solid var(--rule-light); border-radius: 0; display: block; text-align: left; min-height: 52px; }
 .nav-drawer-actions { display: flex; gap: 8px; flex-wrap: wrap; padding-top: 14px; }
 
 /* =========================================================
@@ -259,15 +281,7 @@ img { display: block; max-width: 100%; }
 .hero-clinic-img:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(13,27,42,.18); }
 .hero-clinic-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-/* Placeholder */
-.ph-tile {
-  width: 100%; height: 100%;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 10px; text-align: center; padding: 28px;
-}
-.ph-tile .ph-icon  { font-size: 2.6rem; opacity: .4; }
-.ph-tile .ph-label { font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; opacity: .55; }
-.ph-tile .ph-hint  { font-size: .64rem; opacity: .4; line-height: 1.55; }
+
 
 /* Sunday-closed pill inside hero (moved from top chip) */
 .hero-info-row {
@@ -599,6 +613,7 @@ img { display: block; max-width: 100%; }
   .hero-left  { padding: 48px 24px 32px; order: 1; }
   .hero-right { order: 2; padding: 0 24px 32px; }
   .hero-right::before { display: none; }
+  .hero-clinic-img { aspect-ratio: 16/9; max-height: 56vw; }
   .about-grid { grid-template-columns: 1fr; }
   .about-photo-wrap { max-width: 300px; margin: 0 auto 48px; }
   .about-badge { bottom: -14px; right: -10px; }
@@ -614,8 +629,10 @@ img { display: block; max-width: 100%; }
   .photo-grid {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto;
+    gap: 6px;
   }
-  .photo-grid-cell.span-row { grid-row: unset; grid-column: span 2; height: 200px; }
+  .photo-grid-cell { height: 130px; }
+  .photo-grid-cell.span-row { grid-row: unset; grid-column: span 2; height: 210px; }
   .footer-grid { grid-template-columns: 1fr; }
   .footer-bottom { flex-direction: column; align-items: flex-start; }
   .about-photo-wrap { max-width: 240px; }
@@ -625,190 +642,6 @@ img { display: block; max-width: 100%; }
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
   * { animation: none !important; }
-}
-
-/* =========================================================
-   HERO CARDS (lively animated stats replacing clinic photo)
-   ========================================================= */
-#hero-right-panel {
-  position: relative; overflow: hidden;
-  background: linear-gradient(135deg, #EBF3FD 0%, #E3F2FD 50%, #E8F5F7 100%);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  padding: clamp(40px,6vw,80px) clamp(24px,4vw,56px);
-  gap: 28px;
-}
-
-/* Floating animated orbs */
-.hero-orb {
-  position: absolute; border-radius: 50%; pointer-events: none;
-  filter: blur(60px); opacity: 0.45;
-}
-.hero-orb-1 {
-  width: 280px; height: 280px;
-  background: radial-gradient(circle, #90CAF9, transparent);
-  top: -60px; right: -60px;
-  animation: orbFloat1 8s ease-in-out infinite;
-}
-.hero-orb-2 {
-  width: 200px; height: 200px;
-  background: radial-gradient(circle, #80DEEA, transparent);
-  bottom: 20px; left: -40px;
-  animation: orbFloat2 10s ease-in-out infinite;
-}
-.hero-orb-3 {
-  width: 160px; height: 160px;
-  background: radial-gradient(circle, #B39DDB, transparent);
-  top: 40%; left: 40%;
-  animation: orbFloat3 12s ease-in-out infinite;
-}
-@keyframes orbFloat1 { 0%,100%{transform:translate(0,0) scale(1);} 33%{transform:translate(-20px,18px) scale(1.07);} 66%{transform:translate(12px,-10px) scale(0.95);} }
-@keyframes orbFloat2 { 0%,100%{transform:translate(0,0) scale(1);} 40%{transform:translate(16px,-22px) scale(1.05);} 75%{transform:translate(-8px,12px) scale(0.97);} }
-@keyframes orbFloat3 { 0%,100%{transform:translate(-50%,-50%) scale(1);} 50%{transform:translate(-50%,-50%) scale(1.15);} }
-
-/* Stat cards grid */
-.hero-cards-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 14px; width: 100%; max-width: 380px; position: relative; z-index: 1;
-}
-.hero-cards-2 {
-  max-width: 340px;
-}
-.hcard-label-big {
-  font-family: var(--font-display); font-size: 1.85rem; font-weight: 500;
-  color: var(--blue); line-height: 1;
-}
-.hcard {
-  background: rgba(255,255,255,0.82);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.9);
-  border-radius: 18px; padding: 22px 18px;
-  box-shadow: 0 4px 24px rgba(21,101,192,.1), 0 1px 4px rgba(21,101,192,.06);
-  display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
-  opacity: 0; transform: translateY(20px) scale(0.96);
-  animation: cardIn 0.6s cubic-bezier(.34,1.56,.64,1) forwards;
-  transition: transform 0.22s, box-shadow 0.22s;
-}
-.hcard:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 10px 36px rgba(21,101,192,.16), 0 2px 8px rgba(21,101,192,.08);
-}
-@keyframes cardIn {
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-.hcard-icon { font-size: 1.4rem; }
-.hcard-num  {
-  font-family: var(--font-display); font-size: 1.85rem; font-weight: 600;
-  color: var(--blue); line-height: 1; letter-spacing: -0.01em;
-}
-.hcard-label { font-size: .72rem; color: var(--ink-mute); font-weight: 500; }
-
-/* Live status row */
-.hero-live-row {
-  display: flex; align-items: center; gap: 9px;
-  background: rgba(255,255,255,0.82); backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.9);
-  border-radius: 40px; padding: 9px 18px;
-  box-shadow: 0 2px 12px rgba(21,101,192,.08);
-  position: relative; z-index: 1;
-}
-.live-dot {
-  width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
-  background: #9E9E9E; /* default grey until JS runs */
-}
-.live-dot.open   { background: #27AE60; box-shadow: 0 0 0 3px rgba(39,174,96,.2); animation: livePulse 2s ease-in-out infinite; }
-.live-dot.closed { background: var(--red-closed); }
-@keyframes livePulse { 0%,100%{box-shadow:0 0 0 3px rgba(39,174,96,.2);} 50%{box-shadow:0 0 0 6px rgba(39,174,96,.1);} }
-.live-label { font-size: .78rem; font-weight: 500; color: var(--ink-soft); }
-
-
-/* =========================================================
-   MARQUEE TRUST TICKER
-   ========================================================= */
-#trust-ticker {
-  background: var(--blue-pale);
-  border-top: 1px solid var(--blue-rule);
-  border-bottom: 1px solid var(--blue-rule);
-  padding: 13px 0;
-  overflow: hidden;
-  position: relative;
-}
-#trust-ticker::before,
-#trust-ticker::after {
-  content: ''; position: absolute; top: 0; bottom: 0; width: 80px; z-index: 1;
-  pointer-events: none;
-}
-#trust-ticker::before { left:  0; background: linear-gradient(to right,  var(--blue-pale), transparent); }
-#trust-ticker::after  { right: 0; background: linear-gradient(to left, var(--blue-pale), transparent); }
-.ticker-track {
-  display: flex; gap: 0;
-  animation: ticker 32s linear infinite;
-  width: max-content;
-}
-.ticker-track:hover { animation-play-state: paused; }
-@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.ticker-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 0 28px;
-  font-size: .78rem; font-weight: 500; color: var(--blue-dark);
-  white-space: nowrap;
-}
-.ticker-dot {
-  width: 4px; height: 4px; border-radius: 50%;
-  background: var(--blue-light); flex-shrink: 0;
-}
-
-/* =========================================================
-   PROCESS STEPS
-   ========================================================= */
-#process {
-  background: var(--bg-soft);
-  padding: clamp(56px,7vw,96px) 0;
-  border-top: 1px solid var(--rule);
-}
-.process-head { text-align: center; margin-bottom: clamp(36px,5vw,56px); }
-.process-steps {
-  display: grid; grid-template-columns: repeat(4,1fr);
-  gap: 0; position: relative;
-}
-/* Connecting line between steps */
-.process-steps::before {
-  content: '';
-  position: absolute;
-  top: 36px; left: calc(12.5% + 18px); right: calc(12.5% + 18px);
-  height: 1px;
-  background: var(--rule);
-  z-index: 0;
-}
-.step {
-  display: flex; flex-direction: column; align-items: center;
-  text-align: center; padding: 0 16px; position: relative; z-index: 1;
-}
-.step-num {
-  width: 52px; height: 52px; border-radius: 50%;
-  background: var(--bg-card);
-  border: 2px solid var(--rule);
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-display); font-size: 1.3rem; font-weight: 500;
-  color: var(--blue); margin-bottom: 18px;
-  transition: border-color var(--t), background var(--t), box-shadow var(--t), color var(--t);
-  box-shadow: var(--shadow-sm);
-  position: relative; z-index: 1;
-}
-.step:hover .step-num {
-  border-color: var(--blue);
-  background: var(--blue);
-  color: #fff;
-  box-shadow: 0 0 0 6px rgba(21,101,192,.1);
-}
-.step-title { font-family: var(--font-display); font-size: 1.08rem; color: var(--ink); margin-bottom: 7px; font-weight: 500; }
-.step-desc  { font-size: .8rem; color: var(--ink-mute); line-height: 1.65; max-width: 160px; }
-@media(max-width:700px){
-  .process-steps { grid-template-columns: 1fr 1fr; gap: 32px; }
-  .process-steps::before { display: none; }
-}
-@media(max-width:420px){
-  .process-steps { grid-template-columns: 1fr; }
 }
 
 /* =========================================================
@@ -1035,6 +868,8 @@ img { display: block; max-width: 100%; }
   pointer-events: none; z-index: 0;
 }
 .hero-inner { position: relative; z-index: 1; }
+#hero::before { z-index: 0; pointer-events: none; }
+.hero-left, .hero-right { position: relative; z-index: 2; }
 
 /* Service cards: left border accent on hover */
 .service-card {
@@ -1321,6 +1156,18 @@ img {
 .compat-banner.visible { display: block; }
 .compat-banner a { color: #8a4b00; text-decoration: underline; font-weight: 600; }
 
+
+/* Safe area insets for notched phones */
+#nav {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+.wa-wrap {
+  bottom: calc(22px + env(safe-area-inset-bottom));
+  right: calc(22px + env(safe-area-inset-right));
+}
+#footer { padding-bottom: max(clamp(22px,3vw,32px), env(safe-area-inset-bottom)); }
+
 </style>
 
 <!-- ── Structured Data (Google rich results) ────────── -->
@@ -1543,14 +1390,8 @@ img {
   <div class="container">
     <a href="#hero" class="nav-logo" onclick="scrollTo('hero');return false;" aria-label="Sharan Dental Clinic">
       <div class="nav-logo-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <!-- Refined tooth silhouette -->
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M8.5 2.5C6.5 2.5 3.5 4.2 3.5 7.8C3.5 10.2 4.4 11.9 5.3 13.5C6.1 15 6.4 17.8 7.5 19.3C8 20 8.8 19.7 9.1 18.6C9.5 17.4 9.7 15.2 10.5 14H13.5C14.3 15.2 14.5 17.4 14.9 18.6C15.2 19.7 16 20 16.5 19.3C17.6 17.8 17.9 15 18.7 13.5C19.6 11.9 20.5 10.2 20.5 7.8C20.5 4.2 17.5 2.5 15.5 2.5C14 2.5 13.2 3.4 12 3.4C10.8 3.4 10 2.5 8.5 2.5Z" fill="white" opacity=".95"/>
-          <!-- Root hint lines -->
-          <path d="M10.5 14C10.2 16 9.8 17.8 9.1 18.6" stroke="rgba(255,255,255,.4)" stroke-width=".6" stroke-linecap="round"/>
-          <path d="M13.5 14C13.8 16 14.2 17.8 14.9 18.6" stroke="rgba(255,255,255,.4)" stroke-width=".6" stroke-linecap="round"/>
-          <!-- Shine highlight -->
-          <ellipse cx="9" cy="6.5" rx="1.6" ry="2.2" fill="white" opacity=".18" transform="rotate(-12 9 6.5)"/>
         </svg>
       </div>
       <div>
@@ -1637,12 +1478,13 @@ img {
       </div>
     </div>
 
-    <!-- Hero right: photo placeholder: replace .ph-tile with <img src="your-photo.jpg"> -->
-   <div class="hero-clinic-img">
-    <img src="images/clinic-chair.jpeg"
-         alt="Sharan Dental Clinic"
-         loading="eager">
-</div>
+    <div class="hero-right">
+      <div class="hero-clinic-img">
+        <img src="images/clinic-chair.jpeg"
+             alt="Sharan Dental Clinic treatment room"
+             loading="eager"
+             style="width:100%;height:100%;object-fit:cover;display:block;">
+      </div>
       <div class="hero-hours-row">
         <span class="hero-pill"><span class="pill-dot open-dot"></span>Mon–Sat · 10 am–1 pm</span>
         <span class="hero-pill"><span class="pill-dot open-dot"></span>Mon–Sat · 6–9 pm</span>
@@ -1795,17 +1637,13 @@ img {
   <div class="container">
     <div class="about-grid">
       <div class="about-photo-wrap reveal">
-    <div class="about-photo-frame">
-        <img src="images/doctor-navin.jpeg"
-             alt="Dr. Navin"
-             style="width:100%;height:100%;object-fit:cover;object-position:top center;">
-    </div>
-
-    <div class="about-badge">
-        <div class="about-badge-num">25+</div>
-        <div class="about-badge-text">Years of<br>experience</div>
-    </div>
-</div>
+        <div class="about-photo-frame">
+          <img src="images/doctor-navin.jpeg"
+               alt="Dr. Navin, Principal Dentist at Sharan Dental Clinic HSR Layout"
+               loading="lazy"
+               style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block;">
+        </div>
+      </div>
 
       <div class="reveal">
         <span class="eyebrow">About Dr. Navin</span>
@@ -1873,31 +1711,35 @@ img {
       <p>Clean, well-equipped, and unhurried. Every detail is set up to make visits feel less clinical.</p>
     </div>
     <div class="photo-grid reveal">
-      <!-- Main large cell -->
       <div class="photo-grid-cell span-row">
-       <img src="images/clinic-front.jpeg"
-            alt="Reception"
-            style="width:100%;height:100%;object-fit:cover;border-radius:0;">
+        <img src="images/clinic-front.jpeg"
+             alt="Sharan Dental Clinic exterior and signboard, HSR Layout Bengaluru"
+             loading="lazy"
+             style="width:100%;height:100%;object-fit:cover;display:block;">
       </div>
       <div class="photo-grid-cell">
         <img src="images/consultation-room.jpeg"
-             alt="Treatment Room"
-             style="width:100%;height:100%;object-fit:cover;border-radius:0;">
+             alt="Consultation and treatment area at Sharan Dental Clinic"
+             loading="lazy"
+             style="width:100%;height:100%;object-fit:cover;display:block;">
       </div>
       <div class="photo-grid-cell">
-       <img src="images/clinic-chair.jpeg"
-            alt="Dental Equipment"
-            style="width:100%;height:100%;object-fit:cover;">
+        <img src="images/clinic-chair.jpeg"
+             alt="Dental chair and equipment"
+             loading="lazy"
+             style="width:100%;height:100%;object-fit:cover;display:block;">
       </div>
       <div class="photo-grid-cell">
         <img src="images/clinic-interior.jpeg"
-             alt="Waiting Area"
-             style="width:100%;height:100%;object-fit:cover;">
+             alt="Interior of Sharan Dental Clinic, waiting area"
+             loading="lazy"
+             style="width:100%;height:100%;object-fit:cover;display:block;">
       </div>
       <div class="photo-grid-cell">
         <img src="images/clinic-door.jpeg"
-             alt="Clinic Waiting Area"
-             style="width:100%;height:100%;object-fit:cover;object-position:top center;">
+             alt="Entrance to Sharan Dental Clinic"
+             loading="lazy"
+             style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;">
       </div>
     </div>
   </div>
@@ -2451,7 +2293,7 @@ const EMAILJS_SERVICE_ID       = 'service_4oovoce';
 const EMAILJS_TEMPLATE_DOCTOR  = 'template_ujhps1x';
 const EMAILJS_TEMPLATE_PATIENT = 'template_13cc12b';
 
-const CLINIC_DOCTOR_EMAIL = 'jrtnavin@yahoo.co.in'; // EmailJS delivers to this Gmail — replies go to Yahoo via Reply-To in template
+const CLINIC_DOCTOR_EMAIL = 'jrtnavin@yahoo.co.in';
 const CLINIC_DOCTOR_NAME  = 'Dr. Navin';
 const CLINIC_DOCTOR_PHONE = '+91 97383 87880';
 const CLINIC_ADDRESS      = "3rd Avenue, 5th Main Road, Teacher's Colony, HSR Layout, Bengaluru 560034";
@@ -2708,30 +2550,23 @@ formEl.addEventListener('submit', async function(e) {
   let storageSucceeded = false;
 
   try {
-    // Google Apps Script blocks CORS for JSON POST from browsers.
-    // Sending as a form POST with no-cors bypasses this — we can't
-    // read the response, so we fire-and-forget and treat it as success
-    // after a short delay. EmailJS handles the actual confirmation.
-    const formData = new FormData();
-    formData.append('name', name);
-    formData.append('phone', phone);
-    formData.append('email', email);
-    formData.append('date', date);
-    formData.append('time', timeLabel);
-    formData.append('service', service);
-    formData.append('message', cleanNotes);
-
-    fetch(APPOINTMENT_API_URL, {
+    const res = await fetchWithTimeout(APPOINTMENT_API_URL, {
       method: 'POST',
-      mode: 'no-cors',
-      body: formData
-    }).catch(() => {}); // fire and forget — CORS blocks response but POST goes through
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // avoids CORS preflight on Apps Script
+      body: JSON.stringify({ name, phone, email, date, time: timeLabel, service, message: cleanNotes })
+    }, FETCH_TIMEOUT_MS);
 
     clearTimeout(slowTimer);
 
-    // Generate appointment number locally since we can't read the response
-    const apptNumber = 'SDC-' + Date.now().toString().slice(-6);
-    result = { success: true, appointmentNumber: apptNumber };
+    if (!res.ok) {
+      throw new ServerError('An unexpected error occurred. Please try again in a few minutes.');
+    }
+
+    result = await res.json();
+
+    if (!result || result.success !== true) {
+      throw new ServerError('An unexpected error occurred. Please try again in a few minutes.');
+    }
 
     storageSucceeded = true;
     recordSubmission();
@@ -2769,9 +2604,7 @@ formEl.addEventListener('submit', async function(e) {
         appointment_number: apptNumber,
         patient_name: name, patient_phone: phone, patient_email: email,
         appt_date: prettyDate, appt_time: timeLabel, treatment: service,
-        notes: cleanNotes || 'None',
-        to_email: 'jrtnavin@yahoo.co.in',  // hardcoded — template delivers to Gmail
-        reply_to: email                       // replies go back to the patient
+        notes: cleanNotes || 'None', to_email: CLINIC_DOCTOR_EMAIL
       });
     } catch (err) {
       console.warn('Doctor email failed:', err);
@@ -2782,9 +2615,7 @@ formEl.addEventListener('submit', async function(e) {
         appointment_number: apptNumber, patient_name: name, to_email: email,
         appt_date: prettyDate, appt_time: timeLabel,
         doctor_name: CLINIC_DOCTOR_NAME, doctor_phone: CLINIC_DOCTOR_PHONE,
-        doctor_email: 'jrtnavin@yahoo.co.in',  // shown in email body as contact
-        clinic_address: CLINIC_ADDRESS,
-        reply_to: 'jrtnavin@yahoo.co.in'        // patient replies land in Yahoo
+        doctor_email: CLINIC_DOCTOR_EMAIL, clinic_address: CLINIC_ADDRESS
       });
     } catch (err) {
       console.warn('Patient email failed:', err);
