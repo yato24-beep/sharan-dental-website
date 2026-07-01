@@ -1428,7 +1428,7 @@ img {
   <button class="nav-link" onclick="mobileNav('contact')">Contact</button>
   <div class="nav-drawer-actions">
     <a href="tel:+919738387880" class="btn btn-ghost">Call us</a>
-    <a href="#contact" class="btn btn-primary" onclick="mobileNav('contact');return false;" style="text-align:center;">Book appointment</a>
+    <button class="btn btn-primary" onclick="mobileNav('contact')" style="width:auto;">Book appointment</button>
   </div>
 </div>
 
@@ -2187,7 +2187,20 @@ function closeMenu() {
   drawer.classList.remove('open');
   document.body.style.overflow = '';
 }
-function mobileNav(id) { closeMenu(); setTimeout(() => goTo(id), 300); }
+function mobileNav(id) {
+  menuOpen = false;
+  hamburger.classList.remove('open');
+  hamburger.setAttribute('aria-expanded', 'false');
+  drawer.classList.remove('open');
+  document.body.style.overflow = '';
+  setTimeout(function() {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var navH = (document.getElementById('nav').offsetHeight || 66) + 8;
+    var y = el.getBoundingClientRect().top + window.pageYOffset - navH;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  }, 350);
+}
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
 
 /* ── Word swap animation ───────────────────────── */
