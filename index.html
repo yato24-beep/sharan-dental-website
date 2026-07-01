@@ -1908,7 +1908,11 @@ img {
           <button onclick="resetForm()" class="btn btn-ghost" style="margin-top:18px;">Book another</button>
         </div>
 
-        <form id="appt-form" novalidate>
+        <form id="appt-form" name="appointment" netlify netlify-honeypot="bot-field" novalidate>
+          <!-- Netlify honeypot spam protection -->
+          <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
+          <input type="hidden" name="form-name" value="appointment">
+
           <div class="form-row">
             <div class="field">
               <label for="f-name">Full name <span class="req">*</span></label>
@@ -2550,26 +2554,45 @@ formEl.addEventListener('submit', async function(e) {
   let storageSucceeded = false;
 
   try {
-    const res = await fetchWithTimeout(APPOINTMENT_API_URL, {
+    // Submit to Netlify Forms
+    const netlifyBody = new URLSearchParams({
+      'form-name': 'appointment',
+      'patient_name': name,
+      'patient_phone': phone,
+      'patient_email': email,
+      'preferred_date': date,
+      'preferred_time': timeLabel,
+      'service': service,
+      'message': cleanNotes
+    }).toString();
+
+    const netlifyRes = await fetchWithTimeout('/', {
       method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // avoids CORS preflight on Apps Script
-      body: JSON.stringify({ name, phone, email, date, time: timeLabel, service, message: cleanNotes })
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: netlifyBody
     }, FETCH_TIMEOUT_MS);
 
     clearTimeout(slowTimer);
 
-    if (!res.ok) {
-      throw new ServerError('An unexpected error occurred. Please try again in a few minutes.');
+    // Netlify returns 200 on success
+    if (!netlifyRes.ok) {
+      throw new ServerError('Unable to submit. Please try again or contact us directly.');
     }
 
-    result = await res.json();
-
-    if (!result || result.success !== true) {
-      throw new ServerError('An unexpected error occurred. Please try again in a few minutes.');
-    }
-
+    // Generate appointment reference
+    const apptNum = 'SDC-' + Date.now().toString().slice(-6);
+    result = { success: true, appointmentNumber: apptNum };
     storageSucceeded = true;
     recordSubmission();
+
+    // Also send to Google Apps Script in background for spreadsheet
+    if (APPOINTMENT_API_URL && !APPOINTMENT_API_URL.startsWith('PASTE_')) {
+      fetch(APPOINTMENT_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ name, phone, email, date, time: timeLabel, service, message: cleanNotes })
+      }).catch(() => {});
+    }
 
   } catch (err) {
     clearTimeout(slowTimer);
