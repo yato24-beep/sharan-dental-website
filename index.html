@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
+<script>document.documentElement.classList.remove('no-js');</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -432,6 +433,10 @@ img { display: block; max-width: 100%; }
 .faq-icon.open::after { transform: translate(-50%,-50%) rotate(90deg); opacity: 0; }
 .faq-body { overflow: hidden; max-height: 0; transition: max-height .34s cubic-bezier(.4,0,.2,1); }
 .faq-body p { font-size: .9rem; padding-bottom: 20px; }
+/* No-JS fallback: if JavaScript never runs, show all FAQ answers
+   permanently open rather than permanently hidden. */
+.no-js .faq-body { max-height: none !important; }
+.no-js .faq-icon::before { content: ''; }
 
 .hours-table { width: 100%; border-collapse: collapse; }
 .hours-table td { padding: 4px 0; font-size: .87rem; color: var(--ink-soft); }
@@ -1079,7 +1084,7 @@ img { display: block; max-width: 100%; }
 
 
 /* ── Page load fade-in ───────────────────────────── */
-body { animation: pageFadeIn .45s cubic-bezier(.4,0,.2,1) both; }
+.page-fade-wrap { animation: pageFadeIn .45s cubic-bezier(.4,0,.2,1) both; }
 @keyframes pageFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
 
@@ -1200,6 +1205,121 @@ body { animation: pageFadeIn .45s cubic-bezier(.4,0,.2,1) both; }
 }
 .wa-custom-send:hover { background: #1da851; transform: scale(1.08); }
 .wa-custom-send:active { transform: scale(0.95); }
+
+
+/* =========================================================
+   FORM VALIDATION STATES
+   ========================================================= */
+.field-error {
+  display: none;
+  font-size: .76rem;
+  color: #d32f2f;
+  margin-top: 5px;
+  line-height: 1.4;
+}
+.field-error.visible { display: block; }
+.field.has-error input,
+.field.has-error select,
+.field.has-error textarea {
+  border-color: #d32f2f !important;
+  background: #fdf2f2 !important;
+}
+.field.has-success input,
+.field.has-success select {
+  border-color: #2e7d32 !important;
+}
+.field-counter {
+  display: block;
+  font-size: .72rem;
+  color: var(--ink-mute);
+  text-align: right;
+  margin-top: 4px;
+}
+.field-counter.near-limit { color: #b8860b; }
+.field-counter.at-limit   { color: #d32f2f; }
+
+/* Loading / slow-connection state */
+.form-submit.loading {
+  position: relative; color: transparent !important;
+  pointer-events: none;
+}
+.form-submit.loading::after {
+  content: '';
+  position: absolute; top: 50%; left: 50%;
+  width: 18px; height: 18px;
+  margin: -9px 0 0 -9px;
+  border: 2.5px solid rgba(255,255,255,.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: btnSpin .7s linear infinite;
+}
+@keyframes btnSpin { to { transform: rotate(360deg); } }
+
+.form-status.warning {
+  background: #fff8e1; color: #8a6d00; border: 1px solid #ffe082;
+}
+.form-status.info {
+  background: var(--blue-pale); color: var(--blue-dark); border: 1px solid var(--blue-rule);
+}
+
+/* Loading sub-message under the button */
+.form-submitting-note {
+  display: none;
+  font-size: .8rem; color: var(--ink-mute);
+  text-align: center; margin-top: 10px;
+}
+.form-submitting-note.visible { display: block; }
+
+/* =========================================================
+   NOSCRIPT FALLBACK (JS disabled)
+   ========================================================= */
+.noscript-banner {
+  background: #fff8e1; color: #6b5500; border-bottom: 1px solid #ffe082;
+  text-align: center; padding: 10px 16px; font-size: .85rem;
+}
+.js-only { display: none; }
+.no-js .js-only { display: none !important; }
+.no-js .js-required-hide { display: block !important; }
+
+/* =========================================================
+   IMAGE FALLBACK
+   ========================================================= */
+img { 
+  background: var(--bg-soft);
+}
+.img-fallback {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--blue-pale);
+  color: var(--blue);
+  font-size: .8rem; font-weight: 500;
+  min-height: 120px; text-align: center; padding: 16px;
+}
+
+/* =========================================================
+   PHONE NUMBER COPY BUTTON (desktop fallback)
+   ========================================================= */
+.phone-copy-wrap {
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.phone-copy-btn {
+  background: none; border: 1px solid var(--rule); border-radius: 6px;
+  padding: 3px 9px; font-size: .72rem; cursor: pointer;
+  color: var(--ink-soft); font-family: var(--font-body);
+  transition: background var(--t), border-color var(--t);
+}
+.phone-copy-btn:hover { background: var(--bg-soft); border-color: var(--blue); }
+.phone-copy-btn.copied { color: #2e7d32; border-color: #2e7d32; }
+
+/* =========================================================
+   BROWSER COMPATIBILITY BANNER
+   ========================================================= */
+.compat-banner {
+  background: #fff3e0; color: #8a4b00; border-bottom: 1px solid #ffcc80;
+  text-align: center; padding: 10px 16px; font-size: .85rem;
+  display: none;
+}
+.compat-banner.visible { display: block; }
+.compat-banner a { color: #8a4b00; text-decoration: underline; font-weight: 600; }
 
 </style>
 
@@ -1397,11 +1517,22 @@ body { animation: pageFadeIn .45s cubic-bezier(.4,0,.2,1) both; }
 }
 </script>
 
+<!-- EmailJS SDK (free tier: 200 emails/month, no card required) -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
 
 </head>
 <body>
+<noscript>
+  <div class="noscript-banner">
+    JavaScript is disabled. You can still view our address, phone number, opening hours and treatments below — for appointment booking, please call <strong>+91 97383 87880</strong> or enable JavaScript.
+  </div>
+</noscript>
+<div class="compat-banner" id="compat-banner">
+  For the best experience, please use the latest version of <a href="https://www.google.com/chrome/" target="_blank" rel="noopener">Chrome</a>, Edge, Firefox, or Safari.
+</div>
 <div id="scroll-progress" role="progressbar" aria-hidden="true"></div>
+<div class="page-fade-wrap">
 
 
 
@@ -1942,9 +2073,11 @@ body { animation: pageFadeIn .45s cubic-bezier(.4,0,.2,1) both; }
         <!-- Success state -->
         <div id="form-sent" style="display:none;text-align:center;padding:28px 12px;">
           <div style="font-size:2.5rem;margin-bottom:12px;">✅</div>
-          <h3 style="font-size:1.35rem;margin-bottom:7px;">Request received</h3>
-          <p style="font-size:.86rem;margin-bottom:7px;">We'll confirm your slot within a few hours.</p>
-          <p style="font-size:.76rem;color:var(--ink-mute);">Reference: <strong id="appt-ref" style="color:var(--ink);"></strong></p>
+          <h3 style="font-size:1.35rem;margin-bottom:7px;">Appointment booked successfully</h3>
+          <p style="font-size:.95rem; font-weight:600; margin-bottom:10px; color:var(--ink);">
+            Appointment number: <strong id="appt-ref" style="color:var(--blue);"></strong>
+          </p>
+          <p id="email-status-note" style="font-size:.82rem; line-height:1.6; color:var(--ink-soft); max-width:320px; margin:0 auto 6px;"></p>
           <button onclick="resetForm()" class="btn btn-ghost" style="margin-top:18px;">Book another</button>
         </div>
 
@@ -1952,25 +2085,29 @@ body { animation: pageFadeIn .45s cubic-bezier(.4,0,.2,1) both; }
           <div class="form-row">
             <div class="field">
               <label for="f-name">Full name <span class="req">*</span></label>
-              <input type="text" id="f-name" name="patient_name" placeholder="John Doe" required autocomplete="name">
+              <input type="text" id="f-name" name="patient_name" placeholder="John Doe" required autocomplete="name" maxlength="60" aria-describedby="err-name">
+              <span class="field-error" id="err-name" role="alert"></span>
             </div>
             <div class="field">
               <label for="f-phone">Phone <span class="req">*</span></label>
-              <input type="tel" id="f-phone" name="patient_phone" placeholder="+91 98000 00000" required autocomplete="tel">
+              <input type="tel" id="f-phone" name="patient_phone" placeholder="98000 00000" required autocomplete="tel" inputmode="numeric" maxlength="10" aria-describedby="err-phone">
+              <span class="field-error" id="err-phone" role="alert"></span>
             </div>
           </div>
           <div class="field">
             <label for="f-email">Email <span class="req">*</span></label>
-            <input type="email" id="f-email" name="patient_email" placeholder="john@example.com" required autocomplete="email">
+            <input type="email" id="f-email" name="patient_email" placeholder="john@example.com" required autocomplete="email" aria-describedby="err-email">
+            <span class="field-error" id="err-email" role="alert"></span>
           </div>
           <div class="form-row">
             <div class="field">
               <label for="f-date">Preferred date <span class="req">*</span></label>
-              <input type="date" id="f-date" name="preferred_date" required>
+              <input type="date" id="f-date" name="preferred_date" required aria-describedby="err-date">
+              <span class="field-error" id="err-date" role="alert"></span>
             </div>
             <div class="field">
-              <label for="f-time">Preferred slot</label>
-              <select id="f-time" name="preferred_time">
+              <label for="f-time">Preferred slot <span class="req">*</span></label>
+              <select id="f-time" name="preferred_time" required aria-describedby="err-time">
                 <option value="">Select a slot</option>
                 <optgroup label="Morning">
                   <option value="morning">Morning: 10:00 am to 1:00 pm</option>
@@ -1979,6 +2116,7 @@ body { animation: pageFadeIn .45s cubic-bezier(.4,0,.2,1) both; }
                   <option value="evening">Evening: 6:00 pm to 9:00 pm</option>
                 </optgroup>
               </select>
+              <span class="field-error" id="err-time" role="alert"></span>
             </div>
           </div>
           <div class="field">
@@ -2001,7 +2139,8 @@ body { animation: pageFadeIn .45s cubic-bezier(.4,0,.2,1) both; }
           </div>
           <div class="field">
             <label for="f-msg">Anything else</label>
-            <textarea id="f-msg" name="message" placeholder="Allergies, previous dental history, anxieties, or anything we should know…"></textarea>
+            <textarea id="f-msg" name="message" placeholder="Allergies, previous dental history, anxieties, or anything we should know…" maxlength="500" aria-describedby="msg-counter"></textarea>
+            <span class="field-counter" id="msg-counter">0 / 500</span>
           </div>
           <button type="submit" class="form-submit" id="submit-btn">Request appointment →</button>
           <div class="form-status" id="form-status" role="alert" aria-live="polite"></div>
@@ -2110,10 +2249,13 @@ body { animation: pageFadeIn .45s cubic-bezier(.4,0,.2,1) both; }
     </div>
     <div class="footer-bottom">
       <p>© 2026 Sharan Dental Clinic. All rights reserved.</p>
-      <p>HSR Layout, Bengaluru, Karnataka</p>
+      <p><a href="#" onclick="smartMaps(event)" style="color:inherit;text-decoration:underline;text-underline-offset:2px;">HSR Layout, Bengaluru, Karnataka</a></p>
     </div>
   </div>
 </footer>
+
+</div>
+<!-- /page-fade-wrap -->
 
 <!-- WhatsApp FAB -->
 <!-- WhatsApp Quick-Reply -->
@@ -2122,22 +2264,22 @@ body { animation: pageFadeIn .45s cubic-bezier(.4,0,.2,1) both; }
     <span class="wa-tray-label">Quick message</span>
     <a class="wa-quick"
        href="https://api.whatsapp.com/send?phone=919738387880&text=Hi%2C%20I%27d%20like%20to%20book%20an%20appointment%20at%20Sharan%20Dental%20Clinic."
-       target="_blank" rel="noopener noreferrer" role="menuitem">
+       onclick="openWhatsApp('https://api.whatsapp.com/send?phone=919738387880&text=Hi%2C%20I%27d%20like%20to%20book%20an%20appointment%20at%20Sharan%20Dental%20Clinic.', event)" target="_blank" rel="noopener noreferrer" role="menuitem">
       <span class="wa-quick-icon">📅</span> Book an appointment
     </a>
     <a class="wa-quick"
        href="https://api.whatsapp.com/send?phone=919738387880&text=Hi%2C%20I%20have%20a%20toothache%20and%20need%20to%20see%20the%20doctor%20soon."
-       target="_blank" rel="noopener noreferrer" role="menuitem">
+       onclick="openWhatsApp('https://api.whatsapp.com/send?phone=919738387880&text=Hi%2C%20I%20have%20a%20toothache%20and%20need%20to%20see%20the%20doctor%20soon.', event)" target="_blank" rel="noopener noreferrer" role="menuitem">
       <span class="wa-quick-icon">🦷</span> I have a toothache
     </a>
     <a class="wa-quick"
        href="https://api.whatsapp.com/send?phone=919738387880&text=Hi%2C%20I%20have%20a%20question%20about%20one%20of%20your%20treatments."
-       target="_blank" rel="noopener noreferrer" role="menuitem">
+       onclick="openWhatsApp('https://api.whatsapp.com/send?phone=919738387880&text=Hi%2C%20I%20have%20a%20question%20about%20one%20of%20your%20treatments.', event)" target="_blank" rel="noopener noreferrer" role="menuitem">
       <span class="wa-quick-icon">💬</span> Ask about a treatment
     </a>
     <a class="wa-quick"
        href="https://api.whatsapp.com/send?phone=919738387880&text=Hi%2C%20I%27d%20like%20to%20know%20your%20clinic%20timings%20and%20availability."
-       target="_blank" rel="noopener noreferrer" role="menuitem">
+       onclick="openWhatsApp('https://api.whatsapp.com/send?phone=919738387880&text=Hi%2C%20I%27d%20like%20to%20know%20your%20clinic%20timings%20and%20availability.', event)" target="_blank" rel="noopener noreferrer" role="menuitem">
       <span class="wa-quick-icon">🕐</span> Check availability
     </a>
 
@@ -2251,11 +2393,42 @@ const GMAPS_URL  = 'https://maps.app.goo.gl/oDvpuWWK7gLT3qxs9';
 const AMAPS_URL  = 'https://maps.apple.com/?q=Sharan+Dental+Clinic&ll=12.9178,77.6321&z=17';
 function smartMaps(e) {
   if (e) e.preventDefault();
-  const isApple = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent) && !window.MSStream;
-  window.open(isApple ? AMAPS_URL : GMAPS_URL, '_blank');
+  try {
+    const isApple = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent) && !window.MSStream;
+    const win = window.open(isApple ? AMAPS_URL : GMAPS_URL, '_blank');
+    // Some browsers/popup-blockers return null or a closed window instead of throwing
+    if (!win || win.closed || typeof win.closed === 'undefined') {
+      throw new Error('popup-blocked');
+    }
+  } catch (err) {
+    showToast('Unable to open Maps. Please try again later.');
+  }
 }
 // legacy alias
 function openMaps() { smartMaps(null); }
+
+/* ── Lightweight toast for non-blocking errors (Maps/WhatsApp/etc.) ── */
+let toastTimer = null;
+function showToast(msg) {
+  let toast = document.getElementById('app-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'app-toast';
+    toast.setAttribute('role', 'alert');
+    toast.style.cssText = 'position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:12px 20px;border-radius:30px;font-size:.85rem;font-family:var(--font-body, sans-serif);box-shadow:0 4px 20px rgba(0,0,0,.25);z-index:1200;max-width:90vw;text-align:center;opacity:0;transition:opacity .25s, transform .25s;pointer-events:none;';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  clearTimeout(toastTimer);
+  requestAnimationFrame(() => {
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateX(-50%) translateY(-4px)';
+  });
+  toastTimer = setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(-50%)';
+  }, 3200);
+}
 
 /* ── Date field: block Sundays & past dates ────── */
 function setupDateField() {
@@ -2277,56 +2450,406 @@ function setupDateField() {
 }
 setupDateField();
 
-/* ── Form submission ───────────────────────────── */
-function genRef() { return 'SDC-' + Date.now().toString(36).toUpperCase().slice(-6); }
+/* ============================================================
+   APPOINTMENT FORM — full validation + error handling
+   ============================================================
+   SETUP REQUIRED — fill these 5 values in before going live:
+   1. APPOINTMENT_API_URL → your deployed Google Apps Script Web App URL
+   2. EMAILJS_PUBLIC_KEY  → EmailJS → Account → General → Public Key
+   3. EMAILJS_SERVICE_ID  → EmailJS → Email Services → your connected service
+   4/5. EMAILJS_TEMPLATE_DOCTOR / EMAILJS_TEMPLATE_PATIENT → your two
+        EmailJS template IDs (see emailjs-templates.txt)
+   ------------------------------------------------------------ */
+const APPOINTMENT_API_URL      = 'PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+const EMAILJS_PUBLIC_KEY       = 'PASTE_YOUR_EMAILJS_PUBLIC_KEY';
+const EMAILJS_SERVICE_ID       = 'PASTE_YOUR_EMAILJS_SERVICE_ID';
+const EMAILJS_TEMPLATE_DOCTOR  = 'PASTE_DOCTOR_TEMPLATE_ID';
+const EMAILJS_TEMPLATE_PATIENT = 'PASTE_PATIENT_TEMPLATE_ID';
 
-document.getElementById('appt-form').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const btn    = document.getElementById('submit-btn');
-  const status = document.getElementById('form-status');
+const CLINIC_DOCTOR_EMAIL = 'jrtnavin@yahoo.co.in';
+const CLINIC_DOCTOR_NAME  = 'Dr. Navin';
+const CLINIC_DOCTOR_PHONE = '+91 97383 87880';
+const CLINIC_ADDRESS      = "3rd Avenue, 5th Main Road, Teacher's Colony, HSR Layout, Bengaluru 560034";
 
-  const name  = document.getElementById('f-name').value.trim();
-  const phone = document.getElementById('f-phone').value.trim();
-  const email = document.getElementById('f-email').value.trim();
-  const date  = document.getElementById('f-date').value;
+const FETCH_TIMEOUT_MS    = 14000;  // backend "unavailable" threshold
+const SLOW_NOTICE_MS      = 3000;   // show "please don't close this page" after this long
+const DUPLICATE_WINDOW_MS = 60000;  // block identical re-submits within 60s
 
-  if (!name || !phone || !email || !date) {
-    showStatus('error', 'Please fill in all required fields: name, phone, email, and a preferred date.');
-    return;
+if (window.emailjs && EMAILJS_PUBLIC_KEY && !EMAILJS_PUBLIC_KEY.startsWith('PASTE_')) {
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+}
+
+/* ── Field elements ─────────────────────────────────────── */
+const elName    = document.getElementById('f-name');
+const elPhone   = document.getElementById('f-phone');
+const elEmail   = document.getElementById('f-email');
+const elDate    = document.getElementById('f-date');
+const elTime    = document.getElementById('f-time');
+const elService = document.getElementById('f-service');
+const elMsg     = document.getElementById('f-msg');
+const elCounter = document.getElementById('msg-counter');
+const formEl    = document.getElementById('appt-form');
+
+const VALID_SERVICES = Array.from(elService.options).map(o => o.value).filter(Boolean);
+const VALID_TIME_SLOTS = Array.from(elTime.options).map(o => o.value).filter(Boolean);
+
+/* ── Sanitisation helpers ───────────────────────────────── */
+function collapseSpaces(str) {
+  return str.replace(/\s+/g, ' ').trim();
+}
+function sanitizeNotes(str) {
+  // Strip any HTML tags / angle brackets to prevent injection when
+  // this text is later rendered in Sheets, emails, or anywhere else.
+  return collapseSpaces(str)
+    .replace(/<[^>]*>/g, '')
+    .replace(/[<>]/g, '')
+    .slice(0, 500);
+}
+
+/* ── Per-field validators — each returns '' if valid, else an error string ── */
+function validateName(raw) {
+  const v = collapseSpaces(raw);
+  if (!v) return 'Please enter your full name.';
+  if (v.length < 2) return 'Name must be at least 2 characters.';
+  if (!/^[A-Za-z\s.']+$/.test(v)) return "Name can only contain letters, spaces, periods, and apostrophes.";
+  return '';
+}
+function validatePhone(raw) {
+  const v = raw.replace(/\D/g, '');
+  if (!v) return 'Please enter your phone number.';
+  if (v.length !== 10) return 'Please enter a valid 10-digit mobile number.';
+  return '';
+}
+function validateEmail(raw) {
+  const v = raw.trim();
+  if (!v) return 'Please enter your email address.';
+  // RFC-5322-ish practical pattern
+  const re = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+  if (!re.test(v)) return 'Please enter a valid email address.';
+  return '';
+}
+function validateDate(raw) {
+  if (!raw) return 'Please select a preferred date.';
+  const picked = new Date(raw + 'T00:00:00');
+  const today  = new Date(); today.setHours(0,0,0,0);
+  if (isNaN(picked.getTime())) return 'Please select a valid date.';
+  if (picked < today) return 'Please choose a date that is today or later.';
+  if (picked.getDay() === 0) return 'We are closed on Sundays — please pick another date.';
+  const maxDate = new Date(today); maxDate.setMonth(maxDate.getMonth() + 6);
+  if (picked > maxDate) return 'Appointments can only be booked up to 6 months in advance.';
+  return '';
+}
+function validateTime(raw) {
+  if (!raw) return 'Please select a preferred time slot.';
+  if (!VALID_TIME_SLOTS.includes(raw)) return 'Please choose one of the available time slots.';
+  return '';
+}
+function validateService(raw) {
+  if (!raw) return ''; // optional field
+  if (!VALID_SERVICES.includes(raw)) return 'Please choose a treatment from the list.';
+  return '';
+}
+
+/* ── Inline error display ───────────────────────────────── */
+function setFieldState(inputEl, errorMsg) {
+  const field = inputEl.closest('.field');
+  const errorEl = field.querySelector('.field-error');
+  if (errorMsg) {
+    field.classList.add('has-error');
+    field.classList.remove('has-success');
+    if (errorEl) { errorEl.textContent = errorMsg; errorEl.classList.add('visible'); }
+  } else {
+    field.classList.remove('has-error');
+    field.classList.add('has-success');
+    if (errorEl) { errorEl.textContent = ''; errorEl.classList.remove('visible'); }
   }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    showStatus('error', 'Please enter a valid email address.');
-    return;
-  }
+}
+function clearFieldState(inputEl) {
+  const field = inputEl.closest('.field');
+  field.classList.remove('has-error', 'has-success');
+  const errorEl = field.querySelector('.field-error');
+  if (errorEl) { errorEl.textContent = ''; errorEl.classList.remove('visible'); }
+}
 
-  btn.disabled = true;
-  btn.textContent = 'Sending…';
-  status.style.display = 'none';
+/* ── Inline validation: validate on blur, clear error as user retypes ── */
+elName.addEventListener('blur',  () => setFieldState(elName,  validateName(elName.value)));
+elName.addEventListener('input', () => { if (elName.closest('.field').classList.contains('has-error')) setFieldState(elName, validateName(elName.value)); });
 
-  /* 
-     Wire up your email service here when ready:
-     - EmailJS:    emailjs.send(SERVICE_ID, TEMPLATE_ID, params)
-     - Formspree:  fetch('https://formspree.io/f/YOUR_ID', {method:'POST', body: new FormData(this)})
-     - Web3Forms:  fetch('https://api.web3forms.com/submit', ...)
-  */
-  await new Promise(r => setTimeout(r, 700));
-  document.getElementById('appt-form').style.display = 'none';
-  document.getElementById('form-sent').style.display  = 'block';
-  document.getElementById('appt-ref').textContent     = genRef();
+elPhone.addEventListener('input', () => {
+  // Keep digits only, cap at 10, live-feedback
+  elPhone.value = elPhone.value.replace(/\D/g, '').slice(0, 10);
+  if (elPhone.closest('.field').classList.contains('has-error')) setFieldState(elPhone, validatePhone(elPhone.value));
+});
+elPhone.addEventListener('blur', () => setFieldState(elPhone, validatePhone(elPhone.value)));
+
+elEmail.addEventListener('blur',  () => setFieldState(elEmail, validateEmail(elEmail.value)));
+elEmail.addEventListener('input', () => { if (elEmail.closest('.field').classList.contains('has-error')) setFieldState(elEmail, validateEmail(elEmail.value)); });
+
+elDate.addEventListener('change', () => setFieldState(elDate, validateDate(elDate.value)));
+elTime.addEventListener('change', () => setFieldState(elTime, validateTime(elTime.value)));
+elService.addEventListener('change', () => setFieldState(elService, validateService(elService.value)));
+
+/* ── Character counter for notes ────────────────────────── */
+elMsg.addEventListener('input', () => {
+  const len = elMsg.value.length;
+  elCounter.textContent = len + ' / 500';
+  elCounter.classList.toggle('near-limit', len >= 420 && len < 500);
+  elCounter.classList.toggle('at-limit',   len >= 500);
 });
 
+/* ── Date field constraints (native picker hints) ───────── */
+(function setupDateConstraints() {
+  const today = new Date();
+  const max = new Date(); max.setMonth(max.getMonth() + 6);
+  elDate.min = today.toISOString().split('T')[0];
+  elDate.max = max.toISOString().split('T')[0];
+
+  // Make the ENTIRE field open the calendar picker, not just the
+  // tiny native icon — clicking anywhere on the date text works too.
+  elDate.addEventListener('click', () => {
+    if (typeof elDate.showPicker === 'function') {
+      try { elDate.showPicker(); } catch { /* picker may already be open */ }
+    }
+  });
+  elDate.style.cursor = 'pointer';
+})();
+
+/* ── Network/online awareness ───────────────────────────── */
+function isOnline() {
+  return typeof navigator.onLine === 'boolean' ? navigator.onLine : true;
+}
+
+/* ── Fetch with timeout ──────────────────────────────────── */
+function fetchWithTimeout(url, options, timeoutMs) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  return fetch(url, { ...options, signal: controller.signal })
+    .finally(() => clearTimeout(timer));
+}
+
+/* ── Duplicate-submission guard ─────────────────────────── */
+function getSubmissionFingerprint() {
+  return [elName.value, elPhone.value, elEmail.value, elDate.value, elTime.value].join('|');
+}
+function isDuplicateSubmission() {
+  try {
+    const last = JSON.parse(sessionStorage.getItem('sdc_last_submit') || 'null');
+    if (!last) return false;
+    const sameData = last.fingerprint === getSubmissionFingerprint();
+    const withinWindow = (Date.now() - last.time) < DUPLICATE_WINDOW_MS;
+    return sameData && withinWindow;
+  } catch { return false; }
+}
+function recordSubmission() {
+  try {
+    sessionStorage.setItem('sdc_last_submit', JSON.stringify({
+      fingerprint: getSubmissionFingerprint(),
+      time: Date.now()
+    }));
+  } catch { /* sessionStorage unavailable — non-fatal */ }
+}
+
+/* ── Main submit handler ─────────────────────────────────── */
+formEl.addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submit-btn');
+  const status = document.getElementById('form-status');
+  const slowNote = document.getElementById('form-submitting-note');
+
+  // Sanitize + normalise text inputs before anything else
+  elName.value = collapseSpaces(elName.value);
+  elEmail.value = elEmail.value.trim();
+
+  // Run all validators
+  const errName    = validateName(elName.value);
+  const errPhone   = validatePhone(elPhone.value);
+  const errEmail   = validateEmail(elEmail.value);
+  const errDate    = validateDate(elDate.value);
+  const errTime    = validateTime(elTime.value);
+  const errService = validateService(elService.value);
+
+  setFieldState(elName, errName);
+  setFieldState(elPhone, errPhone);
+  setFieldState(elEmail, errEmail);
+  setFieldState(elDate, errDate);
+  setFieldState(elTime, errTime);
+  setFieldState(elService, errService);
+
+  const firstError = [
+    [elName, errName], [elPhone, errPhone], [elEmail, errEmail],
+    [elDate, errDate], [elTime, errTime], [elService, errService]
+  ].find(([, err]) => err);
+
+  if (firstError) {
+    hideStatus();
+    firstError[0].focus();
+    firstError[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  // Duplicate-submission guard
+  if (isDuplicateSubmission()) {
+    showStatus('warning', 'This appointment appears to have already been submitted. If you intended to make another booking, please modify the details or wait a moment before trying again.');
+    return;
+  }
+
+  // Offline check — fail fast with a clear message, keep all data intact
+  if (!isOnline()) {
+    showStatus('error', 'No internet connection. Please check your connection and try again.');
+    return;
+  }
+
+  // Sanitize notes right before sending
+  const cleanNotes = sanitizeNotes(elMsg.value);
+
+  const name    = elName.value;
+  const phone   = elPhone.value;
+  const email   = elEmail.value;
+  const date    = elDate.value;
+  const timeSel = elTime;
+  const timeLabel = timeSel.options[timeSel.selectedIndex]?.text || 'Not specified';
+  const service = elService.value || 'Not specified';
+
+  btn.disabled = true;
+  btn.classList.add('loading');
+  hideStatus();
+
+  // Show "please don't close this page" if it's taking a while
+  const slowTimer = setTimeout(() => {
+    showStatus('info', "Submitting your appointment… please don't close this page.");
+  }, SLOW_NOTICE_MS);
+
+  let result;
+  let storageSucceeded = false;
+
+  try {
+    const res = await fetchWithTimeout(APPOINTMENT_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // avoids CORS preflight on Apps Script
+      body: JSON.stringify({ name, phone, email, date, time: timeLabel, service, message: cleanNotes })
+    }, FETCH_TIMEOUT_MS);
+
+    clearTimeout(slowTimer);
+
+    if (!res.ok) {
+      throw new ServerError('An unexpected error occurred. Please try again in a few minutes.');
+    }
+
+    result = await res.json();
+
+    if (!result || result.success !== true) {
+      throw new ServerError('An unexpected error occurred. Please try again in a few minutes.');
+    }
+
+    storageSucceeded = true;
+    recordSubmission();
+
+  } catch (err) {
+    clearTimeout(slowTimer);
+    btn.disabled = false;
+    btn.classList.remove('loading');
+
+    if (err.name === 'AbortError') {
+      showStatus('error', "We're unable to process your appointment right now. Please try again later or contact the clinic directly.");
+    } else if (!isOnline()) {
+      showStatus('error', 'No internet connection. Please check your connection and try again.');
+    } else if (err instanceof ServerError) {
+      showStatus('error', err.message);
+    } else if (err instanceof TypeError) {
+      // fetch() throws TypeError on network failure / CORS / DNS issues
+      showStatus('error', 'No internet connection. Please check your connection and try again.');
+    } else {
+      showStatus('error', 'Unable to submit your appointment. Please try again after a few minutes or contact the clinic directly.');
+    }
+    // Form data is intentionally left untouched so the patient can retry without re-typing.
+    return;
+  }
+
+  const apptNumber = result.appointmentNumber;
+  const prettyDate  = formatDateForEmail(date);
+  let emailIssue = false;
+
+  // Emails are sent best-effort: a failure here must NOT undo the
+  // already-successful booking, and must NOT show a failure screen.
+  if (window.emailjs && !EMAILJS_SERVICE_ID.startsWith('PASTE_')) {
+    try {
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_DOCTOR, {
+        appointment_number: apptNumber,
+        patient_name: name, patient_phone: phone, patient_email: email,
+        appt_date: prettyDate, appt_time: timeLabel, treatment: service,
+        notes: cleanNotes || 'None', to_email: CLINIC_DOCTOR_EMAIL
+      });
+    } catch (err) {
+      console.warn('Doctor email failed:', err);
+      emailIssue = true;
+    }
+    try {
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_PATIENT, {
+        appointment_number: apptNumber, patient_name: name, to_email: email,
+        appt_date: prettyDate, appt_time: timeLabel,
+        doctor_name: CLINIC_DOCTOR_NAME, doctor_phone: CLINIC_DOCTOR_PHONE,
+        doctor_email: CLINIC_DOCTOR_EMAIL, clinic_address: CLINIC_ADDRESS
+      });
+    } catch (err) {
+      console.warn('Patient email failed:', err);
+      emailIssue = true;
+    }
+  }
+
+  // Always show success if storage succeeded — emails are secondary
+  btn.classList.remove('loading');
+  showSuccess(apptNumber, emailIssue);
+});
+
+/* Custom error class so we can distinguish "server responded but said no" from network failures */
+class ServerError extends Error {}
+
+function showSuccess(apptNumber, emailIssue) {
+  document.getElementById('appt-form').style.display = 'none';
+  document.getElementById('form-sent').style.display  = 'block';
+  document.getElementById('appt-ref').textContent     = apptNumber;
+
+  const emailNote = document.getElementById('email-status-note');
+  if (emailNote) {
+    if (emailIssue) {
+      emailNote.textContent = "Your appointment has been received successfully, but we couldn't send the confirmation email. If you don't hear from us, please contact the clinic.";
+      emailNote.style.color = '#8a6d00';
+    } else {
+      emailNote.textContent = "A confirmation email is on its way. If you don't see it within a couple of minutes, please check your Spam folder.";
+      emailNote.style.color = '';
+    }
+  }
+}
+
+function hideStatus() {
+  const s = document.getElementById('form-status');
+  s.style.display = 'none';
+}
 function showStatus(type, msg) {
   const s = document.getElementById('form-status');
   s.className = 'form-status ' + type;
   s.textContent = msg;
   s.style.display = 'block';
+  s.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+function formatDateForEmail(isoDate) {
+  try {
+    const d = new Date(isoDate + 'T00:00:00');
+    return d.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  } catch {
+    return isoDate;
+  }
 }
 function resetForm() {
-  document.getElementById('appt-form').reset();
+  formEl.reset();
+  [elName, elPhone, elEmail, elDate, elTime, elService].forEach(clearFieldState);
+  elCounter.textContent = '0 / 500';
+  elCounter.classList.remove('near-limit', 'at-limit');
   document.getElementById('appt-form').style.display = 'block';
   document.getElementById('form-sent').style.display  = 'none';
-  document.getElementById('form-status').style.display = 'none';
+  hideStatus();
   document.getElementById('submit-btn').disabled = false;
+  document.getElementById('submit-btn').classList.remove('loading');
   document.getElementById('submit-btn').textContent = 'Request appointment →';
 }
 
@@ -2478,9 +3001,104 @@ function sendWACustom() {
     return;
   }
   const url = 'https://api.whatsapp.com/send?phone=919738387880&text=' + encodeURIComponent(text);
-  window.open(url, '_blank');
+  openWhatsApp(url);
   input.value = '';
 }
+
+/* ── Shared WhatsApp opener with failure feedback ───────── */
+function openWhatsApp(url, event) {
+  if (event) event.preventDefault();
+  try {
+    const win = window.open(url, '_blank');
+    if (!win || win.closed || typeof win.closed === 'undefined') {
+      throw new Error('popup-blocked');
+    }
+  } catch (err) {
+    showToast('Unable to open WhatsApp. Please call us instead.');
+  }
+}
+
+/* ── tel: links on desktop: most desktop browsers either do nothing
+   or prompt to choose an app the user doesn't have. Detect desktop
+   and offer a one-tap copy of the number instead of a silent failure. ── */
+const isLikelyMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+
+function handleTelClick(e, phoneDisplay) {
+  if (isLikelyMobile) return; // let the native dialer handle it
+  e.preventDefault();
+  copyPhoneNumber(phoneDisplay || '+91 97383 87880');
+}
+
+function copyPhoneNumber(number) {
+  const cleanNumber = number;
+  const showCopiedToast = () => showToast('Phone number copied: ' + cleanNumber);
+  const showFailToast = () => showToast('Could not copy automatically. Our number is ' + cleanNumber);
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(cleanNumber).then(showCopiedToast).catch(showFailToast);
+  } else {
+    // Fallback for older/non-HTTPS contexts
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = cleanNumber;
+      ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showCopiedToast();
+    } catch {
+      showFailToast();
+    }
+  }
+}
+
+// Wire up every tel: link on the page once the DOM is ready
+document.querySelectorAll('a[href^="tel:"]').forEach(link => {
+  link.addEventListener('click', (e) => handleTelClick(e, '+91 97383 87880'));
+});
+
+
+/* ── Image fallback: replace broken images with a clean placeholder ── */
+document.querySelectorAll('img').forEach(img => {
+  img.addEventListener('error', function onErr() {
+    img.removeEventListener('error', onErr);
+    const fallback = document.createElement('div');
+    fallback.className = 'img-fallback';
+    fallback.style.width  = img.offsetWidth  ? img.offsetWidth + 'px'  : '100%';
+    fallback.style.height = img.offsetHeight ? img.offsetHeight + 'px' : '100%';
+    fallback.textContent = img.alt ? img.alt : 'Image unavailable';
+    img.replaceWith(fallback);
+  });
+});
+
+
+/* ── Browser compatibility check ───────────────────────── */
+(function checkBrowserCompat() {
+  const ua = navigator.userAgent;
+  let outdated = false;
+
+  // Internet Explorer (any version)
+  if (/MSIE|Trident/.test(ua)) outdated = true;
+
+  // Very old Safari (pre-iOS 12 / pre-macOS Mojave era, roughly Safari < 12)
+  const safariMatch = ua.match(/Version\/(\d+).*Safari/);
+  if (safariMatch && parseInt(safariMatch[1], 10) < 12) outdated = true;
+
+  // Very old Chrome/Firefox (no longer receiving security updates)
+  const chromeMatch = ua.match(/Chrome\/(\d+)/);
+  if (chromeMatch && parseInt(chromeMatch[1], 10) < 80) outdated = true;
+  const firefoxMatch = ua.match(/Firefox\/(\d+)/);
+  if (firefoxMatch && parseInt(firefoxMatch[1], 10) < 75) outdated = true;
+
+  // Feature-detection fallback: if core features used by this site are missing
+  const missingCore = !window.fetch || !window.Promise || !window.IntersectionObserver;
+
+  if (outdated || missingCore) {
+    const banner = document.getElementById('compat-banner');
+    if (banner) banner.classList.add('visible');
+  }
+})();
 
 </script>
 </body>
