@@ -859,17 +859,20 @@ img { display: block; max-width: 100%; }
 /* ── Design Overrides & Improvements ──────────────── */
 
 /* Hero: subtle dot-grid texture */
-#hero { position: relative; overflow: hidden; }
+#hero { position: relative; }
 #hero::before {
   content: '';
   position: absolute; inset: 0;
   background-image: radial-gradient(circle, rgba(21,101,192,.065) 1px, transparent 1px);
   background-size: 28px 28px;
-  pointer-events: none; z-index: 0;
+  pointer-events: none;
+  z-index: 0;
 }
-.hero-inner { position: relative; z-index: 1; }
-#hero::before { z-index: 0; pointer-events: none; }
-.hero-left, .hero-right { position: relative; z-index: 2; }
+.hero-inner { position: relative; z-index: 2; }
+.hero-left  { position: relative; z-index: 3; }
+.hero-right { position: relative; z-index: 3; }
+.hero-actions { position: relative; z-index: 4; }
+.hero-actions .btn { position: relative; z-index: 4; }
 
 /* Service cards: left border accent on hover */
 .service-card {
@@ -1462,8 +1465,8 @@ img {
       </p>
 
       <div class="hero-actions">
-        <button class="btn btn-primary" onclick="goTo('contact')">Book an appointment</button>
-        <button class="btn btn-ghost" onclick="goTo('services')">Our services</button>
+        <a href="#contact" class="btn btn-primary" onclick="event.preventDefault();goTo('contact')">Book an appointment</a>
+        <a href="#services" class="btn btn-ghost" onclick="event.preventDefault();goTo('services')">Our services</a>
       </div>
 
       <div class="hero-meta">
